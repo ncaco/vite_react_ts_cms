@@ -1,0 +1,22 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+    livereload:
+      enabled: true
+  security:
+    cors:
+      allowed-origins: http://localhost:5173
+  servlet:
+    session:
+      cookie:
+        secure: false  # 개발 환경에서는 HTTPS 불필요
+
+logging:
+  level:
+    root: INFO
+    com.backend.backend: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG 
