@@ -3,9 +3,7 @@ import { RouterProvider } from '@app/providers';
 
 const App: React.FC = () => {
   return (
-    <div className="min-h-screen">
-      <RouterProvider />
-    </div>
+    <RouterProvider />
   );
 };
 

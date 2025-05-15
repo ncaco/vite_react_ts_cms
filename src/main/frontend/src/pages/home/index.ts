@@ -1,2 +1,2 @@
-export { MainPage } from './main';
+export { Main } from './main';
 export { NotFoundPage } from './404';

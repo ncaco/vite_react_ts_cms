@@ -7,6 +7,27 @@ import * as Home from '@pages/home';
 import * as A from '@pages/a';
 import * as B from '@pages/b';
 
+const routeConfigs = [
+  {
+    path: '/',
+    layout: <HomeLayout />,
+    main: <Home.Main />,
+    notFound: <Home.NotFoundPage />,
+  },
+  {
+    path: '/a',
+    layout: <ALayout />,
+    main: <A.Main />,
+    notFound: <A.NotFoundPage />,
+  },
+  {
+    path: '/b',
+    layout: <BLayout />,
+    main: <B.Main />,
+    notFound: <B.NotFoundPage />,
+  },
+];
+
 export const RouterProvider: React.FC = () => {
   return (
     <BrowserRouter>
@@ -14,24 +35,12 @@ export const RouterProvider: React.FC = () => {
       <CustomToaster />
       
       <Routes>
-        {/* 홈 레이아웃 라우트 */}
-        <Route path="/" element={<HomeLayout />}>
-          <Route index element={<Home.MainPage />} />
-          <Route path="*" element={<Home.NotFoundPage />} />
-        </Route>
-
-        {/* A 레이아웃 라우트 */}
-        <Route path="/a" element={<ALayout />}>
-          <Route index element={<A.MainPage />} />
-          <Route path="*" element={<A.NotFoundPage />} />
-        </Route>
-
-
-        {/* B 레이아웃 라우트 */}
-        <Route path="/b" element={<BLayout />}>
-          <Route index element={<B.MainPage />} />
-          <Route path="*" element={<B.NotFoundPage />} />
-        </Route>
+        {routeConfigs.map(({ path, layout, main, notFound }) => (
+          <Route key={path} path={path} element={layout}>
+            <Route index element={main} />
+            <Route path="*" element={notFound} />
+          </Route>
+        ))}
 
         {/* 404 리다이렉트 */}
         <Route path="*" element={<Navigate to="/" replace />} />
