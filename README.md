@@ -1,1 +1,7 @@
-# vite_react_ts_cms
+# backend_example
+backend 샘플
+
+
+# hibernate 관련
+hibernate 접속 방법
+
