@@ -38,9 +38,10 @@ export const RouterProvider: React.FC = () => {
       <CustomToaster />
       
       <Routes>
-        {routeConfigs.map(({ path, layout, main, notFound }) => (
+        {routeConfigs.map(({ path, layout, main, login, notFound }) => (
           <Route key={path} path={path} element={layout}>
             <Route index element={main} />
+            <Route path="login" element={login} />
             <Route path="*" element={notFound} />
           </Route>
         ))}
