@@ -1,2 +1,3 @@
-export { Main } from './main';
-export { NotFoundPage } from './404';
+export * from './main';
+export * from './404';
+export * from './login';

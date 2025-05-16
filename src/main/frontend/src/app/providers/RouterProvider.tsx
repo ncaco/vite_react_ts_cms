@@ -12,18 +12,21 @@ const routeConfigs = [
     path: '/',
     layout: <HomeLayout />,
     main: <Home.Main />,
+    login: <Home.Login />,
     notFound: <Home.NotFoundPage />,
   },
   {
     path: '/a',
     layout: <ALayout />,
     main: <A.Main />,
+    login: <A.Login />,
     notFound: <A.NotFoundPage />,
   },
   {
     path: '/b',
     layout: <BLayout />,
     main: <B.Main />,
+    login: <B.Login />,
     notFound: <B.NotFoundPage />,
   },
 ];
