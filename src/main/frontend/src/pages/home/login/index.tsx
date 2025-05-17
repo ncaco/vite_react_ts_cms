@@ -13,6 +13,25 @@ const Login: React.FC = () => {
 
     return (
         <div className="flex min-h-screen bg-primary-50">
+            <div className="hidden lg:block lg:w-1/2 relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary-400 to-primary-800 overflow-hidden">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-500/0 via-primary-500/40 to-primary-900/70"></div>
+                    <div className="absolute inset-0 overflow-hidden">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] aspect-square">
+                            <div className="absolute inset-0 rounded-full border-[20px] border-white/20"></div>
+                        </div>
+                    </div>
+                    
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div className="w-48 h-48 rounded-full border-8 border-white shadow-2xl bg-transparent flex items-center justify-center">
+                            <div className="w-40 h-40 rounded-full border-4 border-primary-300 bg-primary-600 bg-opacity-50 flex items-center justify-center">
+                                <div className="w-32 h-32 rounded-full bg-white"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div className="w-full lg:w-1/2 flex flex-col justify-center p-8">
                 <div className="max-w-md mx-auto w-full">
                     <h1 className="text-3xl font-bold text-primary-900 mb-2">환영합니다</h1>
@@ -97,25 +116,6 @@ const Login: React.FC = () => {
                 </div>
                 <div className="mt-8 text-center text-xs text-primary-400">
                     © Untitled UI 2023
-                </div>
-            </div>
-            
-            <div className="hidden lg:block lg:w-1/2 relative">
-                <div className="absolute inset-0 bg-gradient-to-b from-primary-400 to-primary-800 overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-500/0 via-primary-500/40 to-primary-900/70"></div>
-                    <div className="absolute inset-0 overflow-hidden">
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] aspect-square">
-                            <div className="absolute inset-0 rounded-full border-[20px] border-white/20"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <div className="w-48 h-48 rounded-full border-8 border-white shadow-2xl bg-transparent flex items-center justify-center">
-                            <div className="w-40 h-40 rounded-full border-4 border-primary-300 bg-primary-600 bg-opacity-50 flex items-center justify-center">
-                                <div className="w-32 h-32 rounded-full bg-white"></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
