@@ -22,7 +22,34 @@ module.exports = {
           950: '#030712',
           DEFAULT: '#6b7280', // GRAY-500
         },
-        secondary: '#475569',
+        secondary: {
+          50:  '#fdf2f2',
+          100: '#fde8e8',
+          200: '#fbd5d5',
+          300: '#f8b4b4',
+          400: '#f98080',
+          500: '#f05252',
+          600: '#e02424',
+          700: '#c81e1e',
+          800: '#9b1c1c',
+          900: '#771d1d',
+          950: '#5f1313',
+          DEFAULT: '#f05252', // 붉은 계열(rose/red)
+        },
+        tertiary: {
+          50:  '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          950: '#172554',
+          DEFAULT: '#3b82f6', // 블루 계열(tertiary-500)
+        },
       },
       borderColor: theme => ({
         ...theme('colors'),
