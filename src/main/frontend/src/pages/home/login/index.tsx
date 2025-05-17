@@ -18,12 +18,12 @@ const Login: React.FC = () => {
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-500/0 via-primary-500/40 to-primary-900/70"></div>
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] aspect-square">
-                            <div className="absolute inset-0 rounded-full border-[20px] border-white/20"></div>
+                            <div className="absolute inset-0 rounded-full border-[20px] border-primary-300/20"></div>
                         </div>
                     </div>
                     
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <div className="w-48 h-48 rounded-full border-8 border-white shadow-2xl bg-transparent flex items-center justify-center">
+                        <div className="w-48 h-48 rounded-full border-8 border-primary-300 shadow-2xl bg-transparent flex items-center justify-center">
                             <div className="w-40 h-40 rounded-full border-4 border-primary-300 bg-primary-600 bg-opacity-50 flex items-center justify-center">
                                 <div className="w-32 h-32 rounded-full bg-white"></div>
                             </div>
@@ -45,9 +45,11 @@ const Login: React.FC = () => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-3 py-2 border border-primary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-primary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-300"
                                 placeholder="이메일 주소 입력"
                                 required
+                                onInvalid={e => (e.currentTarget.setCustomValidity('이메일을 입력해주세요.'))}
+                                onInput={e => (e.currentTarget.setCustomValidity(''))}
                             />
                         </div>
                         
@@ -58,9 +60,11 @@ const Login: React.FC = () => {
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-3 py-2 border border-primary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-primary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-300"
                                 placeholder="••••••••"
                                 required
+                                onInvalid={e => (e.currentTarget.setCustomValidity('비밀번호를 입력해주세요.'))}
+                                onInput={e => (e.currentTarget.setCustomValidity(''))}
                             />
                         </div>
                         
@@ -74,7 +78,7 @@ const Login: React.FC = () => {
                                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-primary-300 rounded"
                                 />
                                 <label htmlFor="remember-me" className="ml-2 block text-sm text-primary-700">
-                                    30일 동안 로그인 유지
+                                    아이디 저장
                                 </label>
                             </div>
                             <div className="text-sm">
@@ -87,7 +91,7 @@ const Login: React.FC = () => {
                         <div className="space-y-3">
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                                className="w-full flex justify-center py-2 px-4 border border-primary-300 rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                             >
                                 로그인
                             </button>

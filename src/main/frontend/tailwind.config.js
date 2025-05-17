@@ -24,6 +24,10 @@ module.exports = {
         },
         secondary: '#475569',
       },
+      borderColor: theme => ({
+        ...theme('colors'),
+        DEFAULT: theme('colors.primary.300', '#d1d5db'), // 기본 border 색상 지정
+      }),
       animation: {
         'fadeIn': 'fadeIn 0.3s ease-in-out',
       },
