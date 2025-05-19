@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
+    // 컴포넌트가 마운트될 때 로컬 스토리지에서 저장된 이메일과 설정 불러오기
+    useEffect(() => {
+        const savedEmail = localStorage.getItem('rememberEmail');
+        const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
+        
+        if (savedEmail && savedRememberMe) {
+            setEmail(savedEmail);
+            setRememberMe(true);
+        }
+    }, []);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // 아이디 저장 체크박스가 체크되어 있으면 로컬 스토리지에 저장
+        if (rememberMe) {
+            localStorage.setItem('rememberEmail', email);
+            localStorage.setItem('rememberMe', 'true');
+        } else {
+            // 체크가 해제되어 있으면 로컬 스토리지에서 삭제
+            localStorage.removeItem('rememberEmail');
+            localStorage.removeItem('rememberMe');
+        }
+        
         // 로그인 처리 로직 구현
         console.log({ email, password, rememberMe });
     };
