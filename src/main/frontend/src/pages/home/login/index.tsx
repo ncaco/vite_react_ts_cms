@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
 
     // 컴포넌트가 마운트될 때 로컬 스토리지에서 저장된 이메일과 설정 불러오기
     useEffect(() => {
@@ -17,75 +14,23 @@ const Login: React.FC = () => {
             setEmail(savedEmail);
             setRememberMe(true);
         }
-        
-        // URL 파라미터에서 에러 메시지 확인
-        const urlParams = new URLSearchParams(window.location.search);
-        const errorParam = urlParams.get('error');
-        if (errorParam === 'auth_failed') {
-            setError('인증에 실패했습니다. 다시 시도해주세요.');
-        } else if (errorParam === 'account_disabled') {
-            setError('비활성화된 계정입니다. 관리자에게 문의하세요.');
-        }
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
-        setLoading(true);
         
-        try {
-            // 아이디 저장 체크박스가 체크되어 있으면 로컬 스토리지에 저장
-            if (rememberMe) {
-                localStorage.setItem('rememberEmail', email);
-                localStorage.setItem('rememberMe', 'true');
-            } else {
-                // 체크가 해제되어 있으면 로컬 스토리지에서 삭제
-                localStorage.removeItem('rememberEmail');
-                localStorage.removeItem('rememberMe');
-            }
-            
-            // 로그인 API 호출
-            const response = await axios.post('/api/session/login', {
-                userId: email,
-                password: password
-            });
-            
-            // 로그인 성공 시 처리
-            if (response.status === 200) {
-                console.log('로그인 성공:', response.data);
-                
-                // 세션 정보 로컬 스토리지에 저장
-                localStorage.setItem('userInfo', JSON.stringify(response.data));
-                
-                // 메인 페이지로 리디렉션
-                window.location.href = '/home/main';
-            }
-        } catch (err) {
-            console.error('로그인 오류:', err);
-            if (axios.isAxiosError(err) && err.response) {
-                setError(err.response.data || '로그인 처리 중 오류가 발생했습니다.');
-            } else {
-                setError('로그인 처리 중 오류가 발생했습니다. 서버 연결을 확인해주세요.');
-            }
-        } finally {
-            setLoading(false);
+        // 아이디 저장 체크박스가 체크되어 있으면 로컬 스토리지에 저장
+        if (rememberMe) {
+            localStorage.setItem('rememberEmail', email);
+            localStorage.setItem('rememberMe', 'true');
+        } else {
+            // 체크가 해제되어 있으면 로컬 스토리지에서 삭제
+            localStorage.removeItem('rememberEmail');
+            localStorage.removeItem('rememberMe');
         }
-    };
-    
-    const handleGoogleLogin = async () => {
-        try {
-            setLoading(true);
-            // 구글 로그인 URL 가져오기
-            const response = await axios.get('/api/oauth/google/url');
-            const { authUrl } = response.data;
-            
-            // 구글 로그인 페이지로 이동
-            window.location.href = authUrl;
-        } catch (err) {
-            console.error('구글 로그인 URL 요청 오류:', err);
-            setError('구글 로그인 처리 중 오류가 발생했습니다. 서버 연결을 확인해주세요.');
-            setLoading(false);
-        }
+        
+        // 로그인 처리 로직 구현
+        console.log({ email, password, rememberMe });
     };
 
     return (
@@ -114,12 +59,6 @@ const Login: React.FC = () => {
                     <h1 className="text-3xl font-bold text-primary-900 mb-2">Home에 오신 것을 환영합니다</h1>
                     <p className="text-primary-500 mb-8">로그인 정보를 입력해주세요.</p>
                     
-                    {error && (
-                        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                            {error}
-                        </div>
-                    )}
-                    
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <label htmlFor="email" className="block text-sm font-medium text-primary-700 mb-1">이메일</label>
@@ -133,7 +72,6 @@ const Login: React.FC = () => {
                                 required
                                 onInvalid={e => (e.currentTarget.setCustomValidity('이메일을 입력해주세요.'))}
                                 onInput={e => (e.currentTarget.setCustomValidity(''))}
-                                disabled={loading}
                             />
                         </div>
                         
@@ -149,7 +87,6 @@ const Login: React.FC = () => {
                                 required
                                 onInvalid={e => (e.currentTarget.setCustomValidity('비밀번호를 입력해주세요.'))}
                                 onInput={e => (e.currentTarget.setCustomValidity(''))}
-                                disabled={loading}
                             />
                         </div>
                         
@@ -161,7 +98,6 @@ const Login: React.FC = () => {
                                     checked={rememberMe}
                                     onChange={(e) => setRememberMe(e.target.checked)}
                                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-primary-300 rounded"
-                                    disabled={loading}
                                 />
                                 <label htmlFor="remember-me" className="ml-2 block text-sm text-primary-700">
                                     아이디 저장
@@ -177,17 +113,14 @@ const Login: React.FC = () => {
                         <div className="space-y-3">
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-primary-300 rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
-                                disabled={loading}
+                                className="w-full flex justify-center py-2 px-4 border border-primary-300 rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                             >
-                                {loading ? '로그인 중...' : '로그인'}
+                                로그인
                             </button>
                             
                             <button
                                 type="button"
-                                className="w-full flex justify-center items-center py-2 px-4 border border-primary-300 rounded-md shadow-sm text-sm font-medium text-primary-700 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
-                                onClick={handleGoogleLogin}
-                                disabled={loading}
+                                className="w-full flex justify-center items-center py-2 px-4 border border-primary-300 rounded-md shadow-sm text-sm font-medium text-primary-700 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                             >
                                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />

@@ -7,15 +7,12 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "TB_USER")
 @Getter
 @Setter
-public class UserVo implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class UserVo {
     @Id
     @Column(name = "USER_ID", length = 30, nullable = false)
     private String userId; // 사용자아이디
@@ -67,7 +64,4 @@ public class UserVo implements Serializable {
 
     @Column(name = "PUSH_TOKEN", length = 200)
     private String pushToken; // FCM 푸시 알림 토큰
-
-    // OAuth2 관련 정보는 MEMO_CN 필드에 JSON 형태로 저장
-    // 별도의 GoogleId 필드 대신 memoCn 사용
 }
