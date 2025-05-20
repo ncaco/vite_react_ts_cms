@@ -14,6 +14,7 @@ import com.backend.api.service.UserService;
 import com.backend.model.SessionVo;
 import com.backend.model.UserVo;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -62,14 +63,23 @@ public class SessionController {
                 return ResponseEntity.badRequest().body("사용자 ID와 비밀번호를 모두 입력해주세요.");
             }
             
+            logger.info("로그인 시도: {}", userId);
+            
             // 실제 DB에서 사용자 정보를 조회하여 인증
             Optional<UserVo> userOpt = userService.getUserByIdAndPassword(userId, password);
             
             if (!userOpt.isPresent()) {
+                logger.warn("로그인 실패: 아이디 또는 비밀번호 불일치 - {}", userId);
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
             }
             
             UserVo user = userOpt.get();
+            
+            // 비활성화된 사용자 체크
+            if (!"Y".equals(user.getUseYn())) {
+                logger.warn("로그인 실패: 비활성화된 계정 - {}", userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("비활성화된 계정입니다. 관리자에게 문의하세요.");
+            }
             
             // 세션 생성
             SessionVo sessionVo = sessionService.createSession(user);

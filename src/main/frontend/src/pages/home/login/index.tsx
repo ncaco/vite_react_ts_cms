@@ -17,6 +17,15 @@ const Login: React.FC = () => {
             setEmail(savedEmail);
             setRememberMe(true);
         }
+        
+        // URL 파라미터에서 에러 메시지 확인
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorParam = urlParams.get('error');
+        if (errorParam === 'auth_failed') {
+            setError('인증에 실패했습니다. 다시 시도해주세요.');
+        } else if (errorParam === 'account_disabled') {
+            setError('비활성화된 계정입니다. 관리자에게 문의하세요.');
+        }
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -43,9 +52,10 @@ const Login: React.FC = () => {
             
             // 로그인 성공 시 처리
             if (response.status === 200) {
-                // 사용자 정보 저장 (세션이나 상태 관리 라이브러리에 저장할 수 있음)
-                const userData = response.data;
-                console.log('로그인 성공:', userData);
+                console.log('로그인 성공:', response.data);
+                
+                // 세션 정보 로컬 스토리지에 저장
+                localStorage.setItem('userInfo', JSON.stringify(response.data));
                 
                 // 메인 페이지로 리디렉션
                 window.location.href = '/home/main';
@@ -55,7 +65,7 @@ const Login: React.FC = () => {
             if (axios.isAxiosError(err) && err.response) {
                 setError(err.response.data || '로그인 처리 중 오류가 발생했습니다.');
             } else {
-                setError('로그인 처리 중 오류가 발생했습니다.');
+                setError('로그인 처리 중 오류가 발생했습니다. 서버 연결을 확인해주세요.');
             }
         } finally {
             setLoading(false);
@@ -64,6 +74,7 @@ const Login: React.FC = () => {
     
     const handleGoogleLogin = async () => {
         try {
+            setLoading(true);
             // 구글 로그인 URL 가져오기
             const response = await axios.get('/api/oauth/google/url');
             const { authUrl } = response.data;
@@ -72,7 +83,8 @@ const Login: React.FC = () => {
             window.location.href = authUrl;
         } catch (err) {
             console.error('구글 로그인 URL 요청 오류:', err);
-            setError('구글 로그인 처리 중 오류가 발생했습니다.');
+            setError('구글 로그인 처리 중 오류가 발생했습니다. 서버 연결을 확인해주세요.');
+            setLoading(false);
         }
     };
 

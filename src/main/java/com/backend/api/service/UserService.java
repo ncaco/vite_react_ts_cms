@@ -3,11 +3,13 @@ package com.backend.api.service;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.json.JSONObject;
 
 import com.backend.model.UserVo;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 사용자 관련 서비스
@@ -17,6 +19,8 @@ public class UserService {
     
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    
+    private ObjectMapper objectMapper = new ObjectMapper();
     
     /**
      * 사용자 ID와 비밀번호로 사용자 조회
@@ -148,9 +152,9 @@ public class UserService {
     public String getGoogleIdFromUser(UserVo user) {
         if (user.getMemoCn() != null && !user.getMemoCn().isEmpty()) {
             try {
-                JSONObject json = new JSONObject(user.getMemoCn());
-                if (json.has("googleId")) {
-                    return json.getString("googleId");
+                Map<String, Object> json = objectMapper.readValue(user.getMemoCn(), Map.class);
+                if (json.containsKey("googleId")) {
+                    return (String) json.get("googleId");
                 }
             } catch (Exception e) {
                 // JSON 파싱 오류 무시
@@ -166,12 +170,12 @@ public class UserService {
      * @param googleId 구글 ID
      */
     public void setGoogleIdToUser(UserVo user, String googleId) {
-        JSONObject json = new JSONObject();
+        Map<String, Object> json = new HashMap<>();
         
         // 기존 메모가 있으면 파싱 시도
         if (user.getMemoCn() != null && !user.getMemoCn().isEmpty()) {
             try {
-                json = new JSONObject(user.getMemoCn());
+                json = objectMapper.readValue(user.getMemoCn(), Map.class);
             } catch (Exception e) {
                 // JSON 파싱 오류 시 새로운 JSON 객체 사용
             }
@@ -179,6 +183,11 @@ public class UserService {
         
         // 구글 ID 설정
         json.put("googleId", googleId);
-        user.setMemoCn(json.toString());
+        try {
+            user.setMemoCn(objectMapper.writeValueAsString(json));
+        } catch (Exception e) {
+            // JSON 변환 오류 시 간단한 문자열로 저장
+            user.setMemoCn("{\"googleId\":\"" + googleId + "\"}");
+        }
     }
 } 
