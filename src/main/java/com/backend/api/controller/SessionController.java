@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.api.service.SessionService;
+import com.backend.api.service.UserService;
 import com.backend.model.SessionVo;
 import com.backend.model.UserVo;
 
@@ -28,6 +29,9 @@ public class SessionController {
     
     @Autowired
     private SessionService sessionService;
+    
+    @Autowired
+    private UserService userService;
     
     /**
      * 임시 사용자 생성 메서드 (실제로는 DB에서 사용자 정보를 가져와야 함)
@@ -58,9 +62,14 @@ public class SessionController {
                 return ResponseEntity.badRequest().body("사용자 ID와 비밀번호를 모두 입력해주세요.");
             }
             
-            // TODO: 실제로는 DB에서 사용자 정보를 조회하여 인증해야 함
-            // 여기서는 테스트 용도로 하드코딩된 사용자 정보를 사용
-            UserVo user = createTestUser(userId, password);
+            // 실제 DB에서 사용자 정보를 조회하여 인증
+            Optional<UserVo> userOpt = userService.getUserByIdAndPassword(userId, password);
+            
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
+            }
+            
+            UserVo user = userOpt.get();
             
             // 세션 생성
             SessionVo sessionVo = sessionService.createSession(user);
