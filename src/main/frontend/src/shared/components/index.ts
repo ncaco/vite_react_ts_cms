@@ -1,1 +1,2 @@
-export * from '../../../app/providers/ProtectedRoute'; 
+export * from './RequireAuth';
+export * from './RedirectIfLoggedIn'; 

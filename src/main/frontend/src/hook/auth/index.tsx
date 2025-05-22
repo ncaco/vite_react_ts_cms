@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import apiInstance from '@/shared/api';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setUser as setAuthUser, logout as logoutAction } from '@/app/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser as setAuthUser, logout as logoutAction, selectCurrentUser } from '@/app/store';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface LoginParams {
     userId: string;
@@ -22,7 +23,9 @@ export function useAuth() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
-
+    const storeUser = useSelector(selectCurrentUser);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // 로그인 함수
     const login = async ({ userId, password }: LoginParams) => {
@@ -59,13 +62,33 @@ export function useAuth() {
         try {
             // 서버에 로그아웃 API가 있다면 호출 (예: /session/logout)
             await apiInstance.post('/session/logout');
+            
+            // Redux 스토어에서 사용자 정보 제거
             dispatch(logoutAction());
             setUser(null);
+            
+            // 로컬 스토리지에서 필요한 인증 관련 데이터 제거 (토큰 등)
+            // localStorage.removeItem('token'); // 사용 중인 경우
+            
+            // 로그아웃 후 현재 경로에 해당하는 로그인 페이지로 이동
+            const basePath = location.pathname.split('/')[1] || '';
+            const loginPath = basePath ? `/${basePath}/login` : '/login';
+            
             setLoading(false);
+            navigate(loginPath, { replace: true });
         } catch (err: unknown) {
             console.error('로그아웃 오류:', err);
             setError('로그아웃 중 오류가 발생했습니다.');
             setLoading(false);
+            
+            // 오류가 발생해도 클라이언트 측에서는 로그아웃 처리
+            dispatch(logoutAction());
+            setUser(null);
+            
+            // 로그인 페이지로 이동
+            const basePath = location.pathname.split('/')[1] || '';
+            const loginPath = basePath ? `/${basePath}/login` : '/login';
+            navigate(loginPath, { replace: true });
         }
     };
 
@@ -87,12 +110,18 @@ export function useAuth() {
         }
     };
 
+    // 인증 상태 확인
+    const isAuthenticated = !!storeUser;
+
     return {
-        user,
+        user: storeUser || user,
         loading,
         error,
         login,
         logout,
         fetchSession,
+        isAuthenticated,
     };
 }
+
+export { useAuthCheck } from './useAuthCheck';
