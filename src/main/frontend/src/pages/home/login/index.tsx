@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hook/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '@/app/store';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
-    const { login, loading, error, isAuthenticated } = useAuth();
+    const { login, loading, error } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const user = useSelector(selectCurrentUser);
-
-    // 디버깅을 위한 로깅 추가
-    useEffect(() => {
-        console.log('Login 컴포넌트 - 마운트/업데이트:');
-        console.log('- user:', user);
-        console.log('- isAuthenticated:', isAuthenticated);
-        console.log('- location:', location);
-        console.log('- location.state:', location.state);
-    }, [user, isAuthenticated, location]);
 
     // 컴포넌트가 마운트될 때 로컬 스토리지에서 저장된 이메일과 설정 불러오기
     useEffect(() => {
@@ -46,17 +34,12 @@ const Login: React.FC = () => {
             localStorage.removeItem('rememberMe');
         }
         
-        // 로그인 처리 로직 구현
-        console.log('로그인 시도:', { email, password, rememberMe });
-        
         // useAuth 훅의 login 함수 호출
         const result = await login({ userId: email, password });
-        console.log('로그인 결과:', result);
         
         if (result) {
             // 로그인 성공 시 이전 페이지가 있으면 그 페이지로, 없으면 메인 페이지로 이동
             const from = location.state?.from?.pathname || '/';
-            console.log('로그인 성공 - 리다이렉트 경로:', from);
             navigate(from, { replace: true });
         }
     };

@@ -26,11 +26,10 @@ export function useAuthCheck() {
         if (response.data) {
           dispatch(setUser(response.data));
         } else {
-          // 응답이 있지만 데이터가 없는 경우 로그아웃 처리
-          clearSession();
+          clearSession(); // 응답이 있지만 데이터가 없는 경우 로그아웃 처리
         }
       } catch {
-        // 세션이 없거나 만료된 경우 로그아웃 처리
+        // 401 에러면 오류창 대신 경고(warn)만 띄움
         clearSession();
       }
     };
@@ -41,8 +40,6 @@ export function useAuthCheck() {
       
       // 로컬 스토리지에서 인증 관련 데이터 제거
       // localStorage.removeItem('token'); // 필요시 토큰 제거
-      
-      console.log('세션이 없거나 만료되었습니다.');
     };
 
     checkAuthStatus();

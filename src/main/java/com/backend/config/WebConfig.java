@@ -27,7 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**")  // 모든 API에 적용
                 .excludePathPatterns(        // 세션 검증이 필요없는 경로는 제외
                     "/api/session/login",    // 로그인 API
-                    "/api/session/logout"    // 로그아웃 API
+                    "/api/session/logout",    // 로그아웃 API
+                    "/api/session/info"    // 세션 정보 조회 API
                 );
     }
 }
