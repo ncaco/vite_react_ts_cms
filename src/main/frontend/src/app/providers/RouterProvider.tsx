@@ -6,8 +6,6 @@ import { HomeLayout, ALayout, BLayout } from '@widgets/layouts';
 import * as Home from '@pages/home';
 import * as A from '@pages/a';
 import * as B from '@pages/b';
-import { RequireAuth } from '@shared/components/RequireAuth';
-import { RedirectIfLoggedIn } from '@shared/components/RedirectIfLoggedIn';
 
 const routeConfigs = [
   {
@@ -44,19 +42,11 @@ export const RouterProvider: React.FC = () => {
           <Route key={path} path={path} element={layout}>
             <Route
               index
-              element={
-                <RequireAuth>
-                  {main}
-                </RequireAuth>
-              }
+              element={main}
             />
             <Route
               path="login"
-              element={
-                <RedirectIfLoggedIn>
-                  {login}
-                </RedirectIfLoggedIn>
-              }
+              element={login}
             />
             <Route path="*" element={notFound} />
           </Route>
